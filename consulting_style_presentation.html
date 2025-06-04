@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投資×外国人採用シナジー事業</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: #f8f9fa;
+        }
+        
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            padding: 40px;
+            display: none;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #2c5282;
+            padding-bottom: 15px;
+        }
+        
+        .slide-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c5282;
+        }
+        
+        .slide-number {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            height: 100%;
+        }
+        
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            height: 100%;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-left: 5px solid #3182ce;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .metric-box {
+            text-align: center;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #3182ce;
+            display: block;
+        }
+        
+        .metric-label {
+            font-size: 1rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3182ce, #667eea);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .icon-text {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+        
+        .icon {
+            width: 30px;
+            height: 30px;
+            background: #3182ce;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .funnel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .funnel-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        
+        .funnel-step::after {
+            content: '→';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: #3182ce;
+        }
+        
+        .funnel-step:last-child::after {
+            display: none;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .table th {
+            background: #3182ce;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .table tr:nth-child(even) {
+            background: #f7fafc;
+        }
+        
+        .risk-matrix {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .risk-item {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .risk-low {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .risk-medium {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background: #3182ce;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .nav-btn:hover {
+            background: #2c5282;
+        }
+        
+        .nav-btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+        
+        .center-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            color: #2c5282;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            color: #3182ce;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #3182ce;
+            font-weight: bold;
+        }
+        
+        .emphasis {
+            color: #e53e3e;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- スライド1: タイトル -->
+    <div class="slide active">
+        <div class="center-content">
+            <h1 style="font-size: 4rem; color: #2c5282; margin-bottom: 20px;">投資×外国人採用</h1>
+            <h1 style="font-size: 4rem; color: #2c5282; margin-bottom: 40px;">シナジー事業</h1>
+            <div class="subtitle">新規事業提案書</div>
+            <div class="highlight-box" style="max-width: 600px;">
+                <div style="font-size: 1.5rem; font-weight: 600;">投資先企業の価値向上と安定収益の両立</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド2: エグゼクティブサマリー -->
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">エグゼクティブサマリー</h1>
+            <div class="slide-number">02</div>
+        </div>
+        <div class="slide-content">
+            <div class="two-column">
+                <div>
+                    <div class="card">
+                        <h2>🎯 事業コンセプト</h2>
+                        <p style="font-size: 1.2rem; margin: 15px 0;">投資先企業における<strong>「初めての外国人採用」</strong>を支援することで、<span class="emphasis">企業価値の向上</span>と<span class="emphasis">安定的な収益</span>の両立を目指します。</p>
+                    </div>
+                    
+                    <div class="card" style="margin-top: 20px;">
+                        <h2>🏆 競争優位性</h2>
+                        <div class="highlight-box">
+                            <strong>「投資事業」との組み合わせ</strong><br>
+                            他社では実現できない参入障壁
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h2 style="margin-bottom: 20px;">💰 収益インパクト</h2>
+                    <div class="metric-box">
+                        <span class="metric-value">3億円+</span>
+                        <div class="metric-label">3年後予想収益</div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
+                        <div class="metric-box">
+                            <span class="metric-value">35万円</span>
+                            <div class="metric-label">初期投資</div>
+                        </div>
+                        <div class="metric-box">
+                            <span class="metric-value">6ヶ月</span>
+                            <div class="metric-label">投資回収期間</div>
+                        </div>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-value">75-85%</span>
+                        <div class="metric-label">成功確率</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド3: 市場機会 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">なぜ今、この事業なのか？</h1>
+            <div class="slide-number">03</div>
+        </div>
+        <div class="slide-content">
+            <div class="three-column">
+                <div class="card">
+                    <h2>📊 市場機会の確実性</h2>
+                    <div style="margin: 20px 0;">
+                        <div class="icon-text">
+                            <div class="icon">62%</div>
+                            <div>外国人採用に前向きな企業</div>
+                        </div>
+                        <div class="icon-text">
+                            <div class="icon">29%</div>
+                            <div>実際に採用している企業</div>
+                        </div>
+                        <div class="highlight-box">
+                            <strong>33%のギャップ</strong><br>
+                            ≈ 約50万社の潜在需要
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 62%;"></div>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">外国人労働者数：過去最高230万人</div>
+                </div>
+                
+                <div class="card">
+                    <h2>🎪 投資事業とのシナジー</h2>
+                    <div style="margin: 20px 0;">
+                        <h3 style="color: #666;">従来の投資後支援</h3>
+                        <ul style="margin-bottom: 20px;">
+                            <li>事業計画の策定</li>
+                            <li>財務管理の支援</li>
+                            <li>ネットワーキング提供</li>
+                        </ul>
+                        
+                        <h3 style="color: #3182ce;">新たな支援の切り口</h3>
+                        <ul>
+                            <li>グローバル人材戦略</li>
+                            <li>外国人採用の実行支援</li>
+                            <li>国際化ブランディング</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>💎 ブルーオーシャン市場</h2>
+                    <div class="icon-text">
+                        <div class="icon">1st</div>
+                        <div>「初めての外国人採用」特化は業界初</div>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">0</div>
+                        <div>「投資×人材」の組み合わせは前例なし</div>
+                    </div>
+                    <div class="highlight-box">
+                        <strong>先行者利益を独占</strong><br>
+                        競合不在の市場
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド4: サービス概要 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">サービス概要</h1>
+            <div class="slide-number">04</div>
+        </div>
+        <div class="slide-content">
+            <div class="two-column">
+                <div>
+                    <div class="highlight-box">
+                        <h2 style="color: white; margin-bottom: 15px;">基本パッケージ</h2>
+                        <div style="font-size: 3rem; font-weight: 700;">98万円</div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>✅ サービス内容</h3>
+                        <div class="icon-text">
+                            <div class="icon">90%</div>
+                            <div>外国人材の厳選紹介（成功率保証）</div>
+                        </div>
+                        <div class="icon-text">
+                            <div class="icon">0</div>
+                            <div>ビザ申請の完全代行（法的リスクゼロ）</div>
+                        </div>
+                        <div class="icon-text">
+                            <div class="icon">PR</div>
+                            <div>採用ブランディング支援</div>
+                        </div>
+                        <div class="icon-text">
+                            <div class="icon">3M</div>
+                            <div>3ヶ月間の定着保証</div>
+                        </div>
+                        <div class="icon-text">
+                            <div class="icon">💯</div>
+                            <div>失敗時全額返金保証</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h2>💡 投資先企業の導入価値</h2>
+                    
+                    <div class="card" style="margin-bottom: 15px;">
+                        <h3>🔹 優秀な外国人材の確保</h3>
+                        <p>エンジニア・技術者不足の解決</p>
+                    </div>
+                    
+                    <div class="card" style="margin-bottom: 15px;">
+                        <h3>🔹 ブランドイメージ向上</h3>
+                        <p>「グローバルで先進的な企業」としての認知</p>
+                    </div>
+                    
+                    <div class="card" style="margin-bottom: 15px;">
+                        <h3>🔹 採用力強化</h3>
+                        <p>他の候補者からの注目度アップ</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>🔹 競争優位性確立</h3>
+                        <p>同業他社との差別化実現</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド5: 収益モデル -->
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">収益モデル｜循環型の収益構造</h1>
+            <div class="slide-number">05</div>
+        </div>
+        <div class="slide-content">
+            <div class="two-column">
+                <div class="card">
+                    <h2>パターン1：投資先企業向け</h2>
+                    <div class="funnel">
+                        <div class="funnel-step">
+                            <div class="icon">💰</div>
+                            <div>投資先企業</div>
+                        </div>
+                        <div class="funnel-step">
+                            <div class="icon">👥</div>
+                            <div>外国人採用支援<br>（98万円）</div>
+                        </div>
+                        <div class="funnel-step">
+                            <div class="icon">📈</div>
+                            <div>企業価値<br>20%向上</div>
+                        </div>
+                        <div class="funnel-step">
+                            <div class="icon">💎</div>
+                            <div>投資収益<br>増加</div>
+                        </div>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <h3>投資額3,000万円の場合</h3>
+                        <div style="margin: 15px 0;">
+                            <div>• サービス売上：98万円</div>
+                            <div>• 企業価値向上：600万円</div>
+                            <div style="font-size: 1.5rem; font-weight: 700; margin-top: 15px;">実質ROI：約6倍</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>パターン2：外部企業向け</h2>
+                    <div style="margin: 20px 0;">
+                        <div class="metric-box">
+                            <span class="metric-value">105万円</span>
+                            <div class="metric-label">従来の紹介料（年収の30%）</div>
+                        </div>
+                        <div style="text-align: center; margin: 15px 0; font-size: 2rem;">VS</div>
+                        <div class="metric-box" style="background: #e6fffa; border-color: #3182ce;">
+                            <span class="metric-value">98万円</span>
+                            <div class="metric-label">当社サービス + PR + 継続関係</div>
+                        </div>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <h3>実質的な総合価値</h3>
+                        <div style="font-size: 2rem; font-weight: 700;">700万円超</div>
+                        <div style="margin-top: 10px;">
+                            <div>• PR効果（500万円相当）</div>
+                            <div>• 採用コスト削減（200万円）</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド6: 収益予測 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">3年間の収益予測</h1>
+            <div class="slide-number">06</div>
+        </div>
+        <div class="slide-content">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>年度</th>
+                        <th>投資先</th>
+                        <th>外部企業</th>
+                        <th>合計受注</th>
+                        <th>サービス売上</th>
+                        <th>投資先価値向上</th>
+                        <th>総収益</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1年目</strong></td>
+                        <td>5社</td>
+                        <td>10社</td>
+                        <td>15社</td>
+                        <td>1,470万円</td>
+                        <td>3,000万円</td>
+                        <td><strong>4,470万円</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>2年目</strong></td>
+                        <td>15社</td>
+                        <td>35社</td>
+                        <td>50社</td>
+                        <td>6,400万円</td>
+                        <td>9,000万円</td>
+                        <td><strong>1.54億円</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>3年目</strong></td>
+                        <td>25社</td>
+                        <td>75社</td>
+                        <td>100社</td>
+                        <td>1.3億円</td>
+                        <td>1.5億円</td>
+                        <td><strong>2.8億円</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h2 style="color: white; margin-bottom: 15px;">3年間累計収益</h2>
+                <div style="font-size: 4rem; font-weight: 700;">約5億円</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド7: ターゲット企業 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">ターゲット企業像</h1>
+            <div class="slide-number">07</div>
+        </div>
+        <div class="slide-content">
+            <div class="two-column">
+                <div class="card">
+                    <h2>🏆 主対象：投資先のIT企業</h2>
+                    <div style="margin: 20px 0;">
+                        <div class="icon-text">
+                            <div class="icon">👥</div>
+                            <div>従業員50〜150名</div>
+                        </div>
+                        <div class="icon-text">
+                            <div class="icon">💰</div>
+                            <div>年商5〜15億円</div>
+                        </div>
+                        <div class="icon-text">
+                            <div class="icon">📅</div>
+                            <div>設立5〜10年の成長期企業</div>
+                        </div>
+                        <div class="icon-text">
+                            <div class="icon">⚡</div>
+                            <div>エンジニア不足・知名度に課題</div>
+                        </div>
+                        <div class="icon-text">
+                            <div class="icon">👨‍💼</div>
+                            <div>社長35〜45歳で挑戦的</div>
+                        </div>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <strong>決裁プロセス</strong><br>
+                        投資家からの提案 → 即決可能<br>
+                        （信頼関係構築済み）
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>🥈 副対象：外部の成長企業</h2>
+                    <div style="margin: 20px 0;">
+                        <h3>アプローチ方法</h3>
+                        <ul>
+                            <li>投資先企業からの紹介</li>
+                            <li>成功実績に基づく提案</li>
+                            <li>「投資家支援付きサービス」として信頼性アップ</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #f7fafc; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        <h3>営業優位性</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%;"></div>
+                        </div>
+                        <div style="text-align: center;">投資先での成功事例による信頼度85%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド8: 実装計画 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">実装計画</h1>
+            <div class="slide-number">08</div>
+        </div>
+        <div class="slide-content">
+            <div class="three-column">
+                <div class="card">
+                    <h2>Phase 1</h2>
+                    <h3>パイロット検証</h3>
+                    <div class="metric-box">
+                        <span class="metric-value">3ヶ月</span>
+                        <div class="metric-label">期間</div>
+                    </div>
+                    <div class="metric-box" style="margin: 15px 0;">
+                        <span class="metric-value">35万円</span>
+                        <div class="metric-label">投資額</div>
+                    </div>
+                    
+                    <h4>目標</h4>
+                    <ul>
+                        <li>投資先3社で成功事例創出</li>
+                        <li>成功率100%達成</li>
+                        <li>CEO満足度90%以上</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <div>売上：294万円</div>
+                        <div>利益：200万円</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>Phase 2</h2>
+                    <h3>本格展開</h3>
+                    <div class="metric-box">
+                        <span class="metric-value">6ヶ月</span>
+                        <div class="metric-label">期間</div>
+                    </div>
+                    <div class="metric-box" style="margin: 15px 0;">
+                        <span class="metric-value">200万円</span>
+                        <div class="metric-label">投資額</div>
+                    </div>
+                    
+                    <h4>展開先</h4>
+                    <ul>
+                        <li>既存投資先：10社</li>
+                        <li>新規投資先：5社</li>
+                        <li>外部企業：10社</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <div>売上：3,200万円</div>
+                        <div>利益：2,100万円</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>Phase 3</h2>
+                    <h3>業界標準化</h3>
+                    <div class="metric-box">
+                        <span class="metric-value">12ヶ月</span>
+                        <div class="metric-label">期間</div>
+                    </div>
+                    <div class="metric-box" style="margin: 15px 0;">
+                        <span class="metric-value">800万円</span>
+                        <div class="metric-label">投資額</div>
+                    </div>
+                    
+                    <h4>目標</h4>
+                    <ul>
+                        <li>他VCへの横展開</li>
+                        <li>カンファレンス発表</li>
+                        <li>全国展開開始</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <div>売上：1.3億円</div>
+                        <div>利益：4,500万円</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド9: リスク分析 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">リスク分析と対策</h1>
+            <div class="slide-number">09</div>
+        </div>
+        <div class="slide-content">
+            <div class="two-column">
+                <div>
+                    <h2>主要リスクと対策</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>リスク</th>
+                                <th>確率</th>
+                                <th>影響度</th>
+                                <th>主な対策</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>投資先の反発</td>
+                                <td>低</td>
+                                <td>中</td>
+                                <td>成功事例による信頼醸成</td>
+                            </tr>
+                            <tr>
+                                <td>外国人材の確保難</td>
+                                <td>中</td>
+                                <td>高</td>
+                                <td>複数の人材ソースとの提携</td>
+                            </tr>
+                            <tr>
+                                <td>法規制の変更</td>
+                                <td>低</td>
+                                <td>高</td>
+                                <td>法務専門家との継続的連携</td>
+                            </tr>
+                            <tr>
+                                <td>競合の出現</td>
+                                <td>中</td>
+                                <td>中</td>
+                                <td>投資事業との融合で差別化</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div>
+                    <h2>撤退条件</h2>
+                    <div class="risk-matrix">
+                        <div class="risk-item risk-medium">
+                            <strong>Phase 1</strong><br>
+                            1社も受注できない場合
+                        </div>
+                        <div class="risk-item risk-medium">
+                            <strong>投資先反発</strong><br>
+                            強い反対がある場合
+                        </div>
+                        <div class="risk-item risk-low">
+                            <strong>法改正</strong><br>
+                            継続困難な変更
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="margin-top: 30px;">
+                        <h3>リスク軽減策</h3>
+                        <ul>
+                            <li>段階的な投資によるリスク分散</li>
+                            <li>各フェーズでの検証・学習</li>
+                            <li>外部専門家との提携</li>
+                            <li>投資先との綿密なコミュニケーション</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド10: 副次効果 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">副次的な効果</h1>
+            <div class="slide-number">10</div>
+        </div>
+        <div class="slide-content">
+            <div class="two-column">
+                <div class="card">
+                    <h2>🏆 投資事業への好影響</h2>
+                    <div class="icon-text">
+                        <div class="icon">📈</div>
+                        <div>投資先の成長支援・収益向上</div>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">⭐</div>
+                        <div>他VCとの差別化実現</div>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🎯</div>
+                        <div>新規投資先の開拓に有利</div>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🤝</div>
+                        <div>投資先との信頼関係強化</div>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <strong>投資家としての付加価値</strong><br>
+                        単なる資金提供を超えた<br>
+                        成長パートナーとしての地位確立
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>🌟 会社全体への波及効果</h2>
+                    <div class="icon-text">
+                        <div class="icon">💰</div>
+                        <div>新たな収益の柱の確立</div>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🌍</div>
+                        <div>ESGブランディングの強化</div>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">👥</div>
+                        <div>自社の外国人採用力向上</div>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🏅</div>
+                        <div>業界プレゼンス向上</div>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🧠</div>
+                        <div>新規事業ノウハウ蓄積</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド11: 意思決定事項 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">今回求める意思決定</h1>
+            <div class="slide-number">11</div>
+        </div>
+        <div class="slide-content">
+            <div class="two-column">
+                <div class="card">
+                    <h2>即座の承認事項</h2>
+                    <div class="icon-text">
+                        <div class="icon">1</div>
+                        <div><strong>Phase 1（投資額35万円）の即時承認</strong></div>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">2</div>
+                        <div><strong>投資先3社での実施許可</strong></div>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">3</div>
+                        <div><strong>専任担当者のアサイン</strong></div>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">4</div>
+                        <div><strong>外部パートナーとの契約承認</strong></div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>スケジュール</h2>
+                    <div class="funnel">
+                        <div class="funnel-step">
+                            <div class="icon">今週</div>
+                            <div>決裁完了</div>
+                        </div>
+                        <div class="funnel-step">
+                            <div class="icon">来週</div>
+                            <div>Phase 1<br>開始</div>
+                        </div>
+                        <div class="funnel-step">
+                            <div class="icon">1M</div>
+                            <div>初回受注</div>
+                        </div>
+                        <div class="funnel-step">
+                            <div class="icon">3M</div>
+                            <div>Phase 1<br>完了</div>
+                        </div>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <strong>緊急性</strong><br>
+                        市場タイミングと競合不在の<br>
+                        先行優位状態は今だけ
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スライド12: 最終結論 -->
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">最終結論</h1>
+            <div class="slide-number">12</div>
+        </div>
+        <div class="slide-content">
+            <div class="center-content">
+                <h2 style="font-size: 2.5rem; margin-bottom: 30px;">この事業は——</h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; width: 100%; max-width: 1000px;">
+                    <div class="card">
+                        <div class="icon-text">
+                            <div class="icon">✅</div>
+                            <div><strong>明確なニーズ</strong>に基づいており</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="icon-text">
+                            <div class="icon">✅</div>
+                            <div><strong>独自の競争優位性</strong>を有し</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="icon-text">
+                            <div class="icon">✅</div>
+                            <div><strong>低リスク・高リターン</strong>な構造で</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="icon-text">
+                            <div class="icon">✅</div>
+                            <div><strong>投資事業との完璧なシナジー</strong>を形成</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight-box" style="margin: 40px 0; max-width: 800px;">
+                    <h2 style="color: white; font-size: 2rem;">今すぐ始めることで</h2>
+                    <h1 style="color: white; font-size: 3rem; margin: 20px 0;">業界のスタンダードを作れる</h1>
+                    <h2 style="color: white; font-size: 2rem;">絶好の機会です</h2>
+                </div>
+                
+                <div style="font-size: 1.5rem; color: #3182ce; font-weight: 600;">
+                    この提案について、ご質問・ご意見をお聞かせください
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">前へ</button>
+        <button class="nav-btn" onclick="nextSlide()">次へ</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            
+            // ナビゲーションボタンの状態更新
+            document.querySelector('.navigation .nav-btn:first-child').disabled = index === 0;
+            document.querySelector('.navigation .nav-btn:last-child').disabled = index === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // キーボードナビゲーション
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // 初期表示
+        showSlide(0);
+    </script>
+</body>
+</html>
